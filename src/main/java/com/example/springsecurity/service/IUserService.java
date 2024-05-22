@@ -10,4 +10,6 @@ public interface IUserService {
     LoginResponseDTO login(LoginRequestDTO requestDTO);
 
     LoginResponseDTO refreshToken(String refreshToken);
+
+    void logout(String username);
 }

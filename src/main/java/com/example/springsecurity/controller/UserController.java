@@ -35,4 +35,16 @@ public class UserController extends BaseController {
                 accLang
         );
     }
+
+    @GetMapping(value = "/logout", produces = "application/json; charset=utf-8")
+    public ResponseEntity<ResponseDTO<Object>> logout(
+            @RequestAttribute("username") String username,
+            @RequestHeader(value = "accept-language", required = false, defaultValue = "en") String accLang) {
+        ResponseDTO<Object> response = new ResponseDTO<>();
+        userService.logout(username);
+        return generateResponse(
+                response,
+                accLang
+        );
+    }
 }

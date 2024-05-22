@@ -4,6 +4,7 @@ import com.example.springsecurity.data.dto.response.LoginResponseDTO;
 import com.example.springsecurity.data.enumuration.ResponseCode;
 import com.example.springsecurity.data.enumuration.UserRole;
 import com.example.springsecurity.exception.APIException;
+import com.example.springsecurity.exception.UnauthorizedException;
 import com.example.springsecurity.util.JsonUtil;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,6 +28,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+import javax.ws.rs.NotAuthorizedException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +44,8 @@ public class KeycloakCaller {
     static final String PASSWORD_STRING = "password";
     static final String REFRESH_TOKEN_AS_STRING = "refresh_token";
 
+    final Keycloak keycloak;
+
     @Value("${my-app.client.id}")
     String clientId;
 
@@ -48,6 +54,9 @@ public class KeycloakCaller {
 
     @Value("${keycloak.token-url}")
     String tokenUrl;
+
+    @Value("${keycloak.realmName}")
+    String realmName;
 
     @Value("${keycloak.admin.username}")
     @Getter
@@ -147,5 +156,28 @@ public class KeycloakCaller {
         bodyData.add("grant_type", REFRESH_TOKEN_AS_STRING);
         bodyData.add(REFRESH_TOKEN_AS_STRING, refreshToken);
         return getToken(bodyData);
+    }
+
+    public void logout(String username) {
+        try {
+            keycloak.tokenManager().getAccessToken().setToken(adminToken);
+            UsersResource usersResource = keycloak
+                    .realm(realmName)
+                    .users();
+            usersResource
+                    .get(
+                            usersResource
+                                    .searchByUsername(username, true)
+                                    .get(0)
+                                    .getId()
+                    ).logout();
+        } catch (NotAuthorizedException notAuthorizedException) {
+            throw new UnauthorizedException();
+        } catch (Exception forbiddenException) {
+            throw new APIException(
+                    ResponseCode.INTERNAL_APP_ERROR,
+                    forbiddenException.getLocalizedMessage()
+            );
+        }
     }
 }

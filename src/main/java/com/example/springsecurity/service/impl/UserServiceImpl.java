@@ -37,4 +37,10 @@ public class UserServiceImpl implements IUserService {
                 tokens.get(1)
         );
     }
+
+    @Override
+    public void logout(String username) {
+        log.debug("... logout start ...");
+        keycloakCaller.logout(username);
+    }
 }
