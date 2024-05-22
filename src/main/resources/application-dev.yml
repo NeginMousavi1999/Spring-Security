@@ -48,6 +48,7 @@ keycloak:
   admin:
     username: admin
     password: admin
+    token-ttl: 828000
 my-app:
   client:
     id: NgnMsv
