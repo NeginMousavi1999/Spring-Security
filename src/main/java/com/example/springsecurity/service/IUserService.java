@@ -8,4 +8,6 @@ import com.example.springsecurity.data.dto.response.LoginResponseDTO;
  */
 public interface IUserService {
     LoginResponseDTO login(LoginRequestDTO requestDTO);
+
+    LoginResponseDTO refreshToken(String refreshToken);
 }

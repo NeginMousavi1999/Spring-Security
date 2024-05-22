@@ -139,4 +139,13 @@ public class KeycloakCaller {
         bodyData.add(PASSWORD_STRING, password);
         return getToken(bodyData);
     }
+
+    public List<String> refreshToken(String refreshToken) {
+        MultiValueMap<String, String> bodyData = new LinkedMultiValueMap<>();
+        bodyData.add("client_id", clientId);
+        bodyData.add("client_secret", clientSecret);
+        bodyData.add("grant_type", REFRESH_TOKEN_AS_STRING);
+        bodyData.add(REFRESH_TOKEN_AS_STRING, refreshToken);
+        return getToken(bodyData);
+    }
 }

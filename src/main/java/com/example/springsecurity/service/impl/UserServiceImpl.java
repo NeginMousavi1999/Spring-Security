@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Negin Mousavi 5/14/2024 - Tuesday
  */
@@ -23,6 +25,16 @@ public class UserServiceImpl implements IUserService {
         return keycloakCaller.login(
                 requestDTO.getUsername(),
                 requestDTO.getPassword()
+        );
+    }
+
+    @Override
+    public LoginResponseDTO refreshToken(String refreshToken) {
+        log.debug("... calling the refresh token api start ...");
+        List<String> tokens = keycloakCaller.refreshToken(refreshToken);
+        return new LoginResponseDTO(
+                tokens.get(0),
+                tokens.get(1)
         );
     }
 }
