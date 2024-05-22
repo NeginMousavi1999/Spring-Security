@@ -1,0 +1,54 @@
+# ===============================
+# = LOGGING
+# ===============================
+logging:
+  level:
+    org.hibernate: error
+    org.springframework.web: error
+    org.springframework.security: error
+    com.example.springsecurity: debug
+# ===============================
+# = LUNCH ON PORT
+# ===============================
+server:
+  port: 8066
+spring:
+  config:
+    location: classpath:/
+  # ===============================
+  # = SECURITY
+  # ===============================
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${my-app.client.id}
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: ${keycloak.url}/realms/${keycloak.realmName}
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.url}/realms/${keycloak.realmName}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+# ===============================
+# = KEYCLOAK API CALL
+# ===============================
+keycloak:
+  base-url: http://localhost:8080/
+  url: ${keycloak.base-url}auth
+  realmName: my-realm
+  token-url: ${keycloak.url}/realms/${keycloak.realmName}/protocol/openid-connect/token
+  admin:
+    username: admin
+    password: admin
+my-app:
+  client:
+    id: NgnMsv
+    secret: N5vrrbs10hcTuD2MMr8AMkNbv90vNCdI

@@ -1,0 +1,45 @@
+# ===============================
+# = SPRING BOOT COMMON CONFIGS
+# ===============================
+spring:
+  application:
+    name: Spring Security Keycloak
+  profiles:
+    active: dev
+#    active: @activatedProperties@
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+# ===============================
+# = SERVER CONFIGS
+# ===============================
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+    context-path: /
+# ===============================
+# = SPRINGDOC CONFIGS
+# ===============================
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+app:
+  api:
+    title: My API
+    description: spring security with keycloak
+    version: 0.0.1SNAPSHOT
+#    version: @version@
+    base-package: com.example.springsecurity
+# ===============================
+# = JASYPT CONFIGS
+# ===============================
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    pool-size: 10
+    password: NgnMsv08
